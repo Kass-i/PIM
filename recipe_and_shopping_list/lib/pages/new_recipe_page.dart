@@ -13,7 +13,9 @@ class _NewRecipePageState extends State<NewRecipePage> {
   final TextEditingController _recipeNameController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
 
-  List<Ingredient> ingredients = [Ingredient(name: '', amount: null, unit: 'szt')];
+  List<Ingredient> ingredients = [
+    Ingredient(name: '', amount: null, unit: 'szt'),
+  ];
 
   final List<String> units = [
     "szt",
@@ -22,7 +24,7 @@ class _NewRecipePageState extends State<NewRecipePage> {
     "kg",
     "szklanka",
     "łyżka",
-    "łyżeczka"
+    "łyżeczka",
   ];
 
   void _addIngredient() {
@@ -100,7 +102,7 @@ class _NewRecipePageState extends State<NewRecipePage> {
               child: ElevatedButton.icon(
                 icon: const Icon(Icons.save),
                 label: const Text("Save"),
-                onPressed: () { },
+                onPressed: () {},
                 style: ElevatedButton.styleFrom(
                   minimumSize: const Size(200, 50),
                 ),

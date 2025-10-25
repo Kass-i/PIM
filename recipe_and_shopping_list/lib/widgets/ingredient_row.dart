@@ -52,7 +52,9 @@ class IngredientRow extends StatelessWidget {
                     ),
                     keyboardType: TextInputType.number,
                     onChanged: onAmountChanged,
-                    controller: TextEditingController(text: ingredient.amount?.toString()),
+                    controller: TextEditingController(
+                      text: ingredient.amount?.toString(),
+                    ),
                   ),
                 ),
                 const SizedBox(width: 8),
@@ -65,19 +67,16 @@ class IngredientRow extends StatelessWidget {
                       border: OutlineInputBorder(),
                     ),
                     items: units
-                        .map((unit) => DropdownMenuItem(
-                              value: unit,
-                              child: Text(unit),
-                            ))
+                        .map(
+                          (unit) =>
+                              DropdownMenuItem(value: unit, child: Text(unit)),
+                        )
                         .toList(),
                     onChanged: (val) => onUnitChanged(val!),
                   ),
                 ),
                 const SizedBox(width: 8),
-                IconButton(
-                  icon: const Icon(Icons.delete),
-                  onPressed: onDelete,
-                ),
+                IconButton(icon: const Icon(Icons.delete), onPressed: onDelete),
               ],
             ),
           ],

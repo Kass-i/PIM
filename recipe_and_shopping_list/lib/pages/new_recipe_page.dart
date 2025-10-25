@@ -53,9 +53,11 @@ class _NewRecipePageState extends State<NewRecipePage> {
           children: [
             TextField(
               controller: _recipeNameController,
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 labelText: "Recipe name",
-                border: OutlineInputBorder(),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(14),
+                ),
               ),
             ),
             const SizedBox(height: 20),
@@ -82,17 +84,22 @@ class _NewRecipePageState extends State<NewRecipePage> {
 
             Center(
               child: ElevatedButton.icon(
-                onPressed: _addIngredient,
                 icon: const Icon(Icons.add),
                 label: const Text("Add ingredient"),
+                onPressed: _addIngredient,
+                style: ElevatedButton.styleFrom(
+                  minimumSize: const Size(160, 40),
+                ),
               ),
             ),
             const SizedBox(height: 20),
             TextField(
               controller: _descriptionController,
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 labelText: "Recipe",
-                border: OutlineInputBorder(),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(14),
+                ),
               ),
               keyboardType: TextInputType.multiline,
               minLines: 5,
@@ -105,7 +112,7 @@ class _NewRecipePageState extends State<NewRecipePage> {
                 label: const Text("Save"),
                 onPressed: () {},
                 style: ElevatedButton.styleFrom(
-                  minimumSize: const Size(200, 50),
+                  minimumSize: const Size(160, 40),
                 ),
               ),
             ),

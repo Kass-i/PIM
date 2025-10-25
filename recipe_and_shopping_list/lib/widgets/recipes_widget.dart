@@ -21,7 +21,7 @@ class RecipesWidget extends StatelessWidget {
                 margin: const EdgeInsets.all(8),
                 elevation: 3,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(14),
                 ),
                 child: ExpansionTile(
                   title: Text(
@@ -48,7 +48,7 @@ class RecipesWidget extends StatelessWidget {
                             '(${ingredient.amount} ${ingredient.unit})',
                           ),
                         ),
-                        const SizedBox(height: 8), // TODO: do it better
+                        const SizedBox(height: 8),
                         const Text(
                           'Directions:',
                           style: TextStyle(
@@ -57,7 +57,7 @@ class RecipesWidget extends StatelessWidget {
                           ),
                         ),
                         Text(recipe.directions),
-                        const SizedBox(height: 16), // TODO: do it better
+                        const SizedBox(height: 16),
                       ],
                     ),
                   ],

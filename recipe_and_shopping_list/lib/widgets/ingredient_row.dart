@@ -26,7 +26,7 @@ class IngredientRow extends StatelessWidget {
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
       elevation: 3,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
       child: Padding(
         padding: const EdgeInsets.all(12),
         child: Column(
@@ -36,9 +36,11 @@ class IngredientRow extends StatelessWidget {
               children: [
                 Expanded(
                   child: TextField(
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       labelText: "Name",
-                      border: OutlineInputBorder(),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(14),
+                      ),
                     ),
                     onChanged: onNameChanged,
                     controller: TextEditingController(text: ingredient.name),
@@ -56,9 +58,11 @@ class IngredientRow extends StatelessWidget {
                 Expanded(
                   flex: 3,
                   child: TextField(
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       labelText: "Amount",
-                      border: OutlineInputBorder(),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(14),
+                      ),
                     ),
                     keyboardType: TextInputType.number,
                     onChanged: onAmountChanged,
@@ -72,9 +76,11 @@ class IngredientRow extends StatelessWidget {
                   flex: 4,
                   child: DropdownButtonFormField<String>(
                     initialValue: ingredient.unit,
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       labelText: "Unit",
-                      border: OutlineInputBorder(),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(14),
+                      ),
                     ),
                     items: units
                         .map(
@@ -92,7 +98,7 @@ class IngredientRow extends StatelessWidget {
                     decoration: InputDecoration(
                       labelText: "Tag",
                       border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(22),
+                        borderRadius: BorderRadius.circular(28),
                       ),
                       filled: true,
                       fillColor: Theme.of(

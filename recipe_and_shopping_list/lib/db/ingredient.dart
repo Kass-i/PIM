@@ -7,6 +7,6 @@ class Ingredient {
   });
   String? id;
   String name;
-  int amount;
+  int? amount;
   String unit;
 }

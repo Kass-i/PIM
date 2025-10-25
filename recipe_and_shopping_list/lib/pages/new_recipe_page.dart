@@ -22,9 +22,9 @@ class _NewRecipePageState extends State<NewRecipePage> {
     "g",
     "dag",
     "kg",
-    "szklanka",
-    "łyżka",
-    "łyżeczka",
+    "szkl.",
+    "łyż.",
+    "łyżecz.",
   ];
 
   void _addIngredient() {
@@ -47,7 +47,7 @@ class _NewRecipePageState extends State<NewRecipePage> {
         title: Text('Add new recipe'),
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(12),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -76,6 +76,7 @@ class _NewRecipePageState extends State<NewRecipePage> {
                 onNameChanged: (val) => ingredient.name = val,
                 onAmountChanged: (val) => ingredient.amount = val as int,
                 onUnitChanged: (val) => ingredient.unit = val,
+                onTagChanged: (val) => ingredient.tag = val,
               );
             }),
 

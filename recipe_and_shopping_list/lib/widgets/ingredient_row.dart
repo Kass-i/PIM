@@ -8,6 +8,7 @@ class IngredientRow extends StatelessWidget {
   final ValueChanged<String> onNameChanged;
   final ValueChanged<String> onAmountChanged;
   final ValueChanged<String> onUnitChanged;
+  final ValueChanged<String> onTagChanged;
 
   const IngredientRow({
     super.key,
@@ -17,6 +18,7 @@ class IngredientRow extends StatelessWidget {
     required this.onNameChanged,
     required this.onAmountChanged,
     required this.onUnitChanged,
+    required this.onTagChanged,
   });
 
   @override
@@ -29,18 +31,26 @@ class IngredientRow extends StatelessWidget {
         padding: const EdgeInsets.all(12),
         child: Column(
           children: [
-            // Ingredient name
-            TextField(
-              decoration: const InputDecoration(
-                labelText: "Name",
-                border: OutlineInputBorder(),
-              ),
-              onChanged: onNameChanged,
-              controller: TextEditingController(text: ingredient.name),
+            // Ingredient name, delete icon
+            Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    decoration: const InputDecoration(
+                      labelText: "Name",
+                      border: OutlineInputBorder(),
+                    ),
+                    onChanged: onNameChanged,
+                    controller: TextEditingController(text: ingredient.name),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                IconButton(icon: const Icon(Icons.delete), onPressed: onDelete),
+              ],
             ),
             const SizedBox(height: 10),
 
-            // Amount, unit, delete icon
+            // Amount, unit, tag
             Row(
               children: [
                 Expanded(
@@ -59,7 +69,7 @@ class IngredientRow extends StatelessWidget {
                 ),
                 const SizedBox(width: 8),
                 Expanded(
-                  flex: 3,
+                  flex: 4,
                   child: DropdownButtonFormField<String>(
                     initialValue: ingredient.unit,
                     decoration: const InputDecoration(
@@ -76,7 +86,23 @@ class IngredientRow extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 8),
-                IconButton(icon: const Icon(Icons.delete), onPressed: onDelete),
+                Expanded(
+                  flex: 6,
+                  child: TextField(
+                    decoration: InputDecoration(
+                      labelText: "Tag",
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(22),
+                      ),
+                      filled: true,
+                      fillColor: Theme.of(
+                        context,
+                      ).colorScheme.secondaryContainer,
+                    ),
+                    onChanged: onTagChanged,
+                    controller: TextEditingController(text: ingredient.tag),
+                  ),
+                ),
               ],
             ),
           ],

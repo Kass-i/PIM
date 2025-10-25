@@ -17,7 +17,7 @@ class RecipesWidget extends StatelessWidget {
             itemBuilder: (context, index) {
               final recipe = recipes[index];
               return Card(
-                color: Theme.of(context).colorScheme.primaryContainer,
+                color: Theme.of(context).colorScheme.secondaryContainer,
                 margin: const EdgeInsets.all(8),
                 elevation: 3,
                 shape: RoundedRectangleBorder(

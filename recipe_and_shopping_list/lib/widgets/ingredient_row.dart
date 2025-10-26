@@ -27,6 +27,7 @@ class IngredientRow extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 12),
       elevation: 3,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+      color: Theme.of(context).colorScheme.surfaceContainerLow,
       child: Padding(
         padding: const EdgeInsets.all(12),
         child: Column(
@@ -101,9 +102,7 @@ class IngredientRow extends StatelessWidget {
                         borderRadius: BorderRadius.circular(28),
                       ),
                       filled: true,
-                      fillColor: Theme.of(
-                        context,
-                      ).colorScheme.secondaryContainer,
+                      fillColor: Theme.of(context).colorScheme.primaryContainer,
                     ),
                     onChanged: onTagChanged,
                     controller: TextEditingController(text: ingredient.tag),

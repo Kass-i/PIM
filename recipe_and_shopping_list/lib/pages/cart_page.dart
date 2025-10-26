@@ -36,7 +36,6 @@ class _ShoppingListPageState extends State<ShoppingListPage> {
                 final tag = entry.key;
                 final ingredients = entry.value;
                 return Card(
-                  color: Theme.of(context).colorScheme.secondaryContainer,
                   margin: const EdgeInsets.all(12),
                   elevation: 3,
                   shape: RoundedRectangleBorder(
@@ -64,7 +63,11 @@ class _ShoppingListPageState extends State<ShoppingListPage> {
                               decoration: isChecked
                                   ? TextDecoration.lineThrough
                                   : TextDecoration.none,
-                              color: isChecked ? Colors.grey : Colors.black,
+                              color: isChecked
+                                  ? Colors.grey
+                                  : Theme.of(
+                                      context,
+                                    ).textTheme.bodyLarge?.color,
                             ),
                           ),
                           onTap: () {

@@ -18,6 +18,43 @@ void main() {
   );
 }
 
+final ColorScheme lightColorScheme = ColorScheme.fromSeed(
+  seedColor: Colors.deepPurple,
+  brightness: Brightness.light,
+);
+
+final ColorScheme darkColorScheme = ColorScheme.fromSeed(
+  seedColor: Colors.deepPurple,
+  brightness: Brightness.dark,
+);
+
+ThemeData lightTheme = ThemeData(
+  useMaterial3: true,
+  colorScheme: lightColorScheme,
+  brightness: Brightness.light,
+
+  bottomNavigationBarTheme: BottomNavigationBarThemeData(
+    backgroundColor: lightColorScheme.secondaryContainer,
+    selectedItemColor: lightColorScheme.primary,
+  ),
+  appBarTheme: AppBarTheme(backgroundColor: lightColorScheme.inversePrimary),
+  cardTheme: CardThemeData(color: lightColorScheme.secondaryContainer),
+);
+
+ThemeData darkTheme = ThemeData(
+  useMaterial3: true,
+  colorScheme: darkColorScheme,
+  brightness: Brightness.dark,
+
+  scaffoldBackgroundColor: darkColorScheme.surface,
+  bottomNavigationBarTheme: BottomNavigationBarThemeData(
+    backgroundColor: darkColorScheme.onPrimaryFixed,
+    selectedItemColor: darkColorScheme.onPrimaryContainer,
+  ),
+  appBarTheme: AppBarTheme(backgroundColor: darkColorScheme.onPrimaryFixed),
+  cardTheme: CardThemeData(color: darkColorScheme.onPrimary),
+);
+
 class MainApp extends StatelessWidget {
   const MainApp({super.key});
 
@@ -25,10 +62,7 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Recipe & Shopping List',
-      theme: ThemeData(
-        useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-      ),
+      theme: lightTheme,
       home: Home(),
     );
   }
@@ -78,32 +112,38 @@ class _HomeState extends State<Home> {
           ),
         ],
         currentIndex: _selectedIndex,
-        backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
-        selectedItemColor: Theme.of(context).colorScheme.primary,
         onTap: _onItemTapped,
       ),
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(_title[_selectedIndex]),
-      ),
+      appBar: AppBar(title: Text(_title[_selectedIndex])),
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
             UserAccountsDrawerHeader(
               decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.primary,
+                color: Theme.of(context).colorScheme.inversePrimary,
               ),
-              accountName: Text("Kasia X", style: TextStyle(fontSize: 20)),
-              accountEmail: Text("kasia@gmail.com"),
+              accountName: Text(
+                "Kasia X",
+                style: TextStyle(
+                  fontSize: 20,
+                  color: Theme.of(context).colorScheme.onPrimaryContainer,
+                ),
+              ),
+              accountEmail: Text(
+                "kasia@gmail.com",
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.onPrimaryContainer,
+                ),
+              ),
               currentAccountPictureSize: Size.square(50),
               currentAccountPicture: CircleAvatar(
-                backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+                backgroundColor: Theme.of(context).colorScheme.primary,
                 child: Text(
                   "K",
                   style: TextStyle(
                     fontSize: 30,
-                    color: Theme.of(context).colorScheme.primary,
+                    color: Theme.of(context).colorScheme.inversePrimary,
                   ),
                 ),
               ),

@@ -31,6 +31,7 @@ class RecipesWidget extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
+                  shape: Border(), // Remove divider lines
                   children: [
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,

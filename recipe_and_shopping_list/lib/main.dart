@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:recipe_and_shopping_list/pages/cart_page.dart';
 import 'package:recipe_and_shopping_list/pages/new_recipe_page.dart';
 import 'package:recipe_and_shopping_list/pages/recipes_page.dart';
+import 'package:recipe_and_shopping_list/providers/cart_provider.dart';
 import 'package:recipe_and_shopping_list/providers/recipes_provider.dart';
 
 void main() {
   runApp(
     MultiProvider(
-      providers: [ChangeNotifierProvider(create: (_) => RecipesProvider())],
+      providers: [
+        ChangeNotifierProvider(create: (_) => RecipesProvider()),
+        ChangeNotifierProvider(create: (_) => CartProvider()),
+      ],
       child: const MainApp(),
     ),
   );
@@ -21,6 +26,7 @@ class MainApp extends StatelessWidget {
     return MaterialApp(
       title: 'Recipe & Shopping List',
       theme: ThemeData(
+        useMaterial3: true,
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
       home: Home(),
@@ -41,6 +47,7 @@ class _HomeState extends State<Home> {
   static const List<Widget> _widgetOptions = <Widget>[
     RecipesPage(),
     NewRecipePage(),
+    ShoppingListPage(),
   ];
 
   void _onItemTapped(int index) {

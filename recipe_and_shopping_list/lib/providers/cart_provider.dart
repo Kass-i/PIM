@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:recipe_and_shopping_list/db/ingredient.dart';
 import 'package:recipe_and_shopping_list/db/recipe.dart';
 
-class RecipesProvider extends ChangeNotifier {
-  final List<Recipe> _recipes = [
+class CartProvider extends ChangeNotifier {
+  final List<Recipe> _cart = [
     Recipe(
       name: 'Naleśniki',
       directions:
@@ -25,5 +25,5 @@ class RecipesProvider extends ChangeNotifier {
     ),
   ];
 
-  List<Recipe> get recipes => _recipes;
+  List<Recipe> get cart => _cart;
 }

@@ -42,10 +42,6 @@ class _NewRecipePageState extends State<NewRecipePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text('Add new recipe'),
-      ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(12),
         child: Column(

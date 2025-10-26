@@ -28,10 +28,6 @@ class _ShoppingListPageState extends State<ShoppingListPage> {
     }
 
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text("Shopping List"),
-      ),
       body: Column(
         children: [
           Expanded(

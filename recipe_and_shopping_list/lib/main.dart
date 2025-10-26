@@ -50,6 +50,8 @@ class _HomeState extends State<Home> {
     ShoppingListPage(),
   ];
 
+  final List<String> _title = ["Recipes", "Add new recipe", "Shopping List"];
+
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -79,6 +81,45 @@ class _HomeState extends State<Home> {
         backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
         selectedItemColor: Theme.of(context).colorScheme.primary,
         onTap: _onItemTapped,
+      ),
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        title: Text(_title[_selectedIndex]),
+      ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            UserAccountsDrawerHeader(
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.primary,
+              ),
+              accountName: Text("Kasia X", style: TextStyle(fontSize: 20)),
+              accountEmail: Text("kasia@gmail.com"),
+              currentAccountPictureSize: Size.square(50),
+              currentAccountPicture: CircleAvatar(
+                backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+                child: Text(
+                  "K",
+                  style: TextStyle(
+                    fontSize: 30,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+                ),
+              ),
+            ),
+            ListTile(
+              leading: const Icon(Icons.settings),
+              title: const Text('Settings'),
+              onTap: () {},
+            ),
+            ListTile(
+              leading: const Icon(Icons.login),
+              title: const Text('Login'),
+              onTap: () {},
+            ),
+          ],
+        ),
       ),
     );
   }

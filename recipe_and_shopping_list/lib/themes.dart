@@ -32,6 +32,7 @@ ThemeData darkTheme = ThemeData(
   bottomNavigationBarTheme: BottomNavigationBarThemeData(
     backgroundColor: darkColorScheme.onPrimaryFixed,
     selectedItemColor: darkColorScheme.onPrimaryContainer,
+    unselectedItemColor: darkColorScheme.outline,
   ),
   appBarTheme: AppBarTheme(backgroundColor: darkColorScheme.onPrimaryFixed),
   cardTheme: CardThemeData(color: darkColorScheme.onPrimary),

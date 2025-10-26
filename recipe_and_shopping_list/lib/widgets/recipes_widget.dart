@@ -24,12 +24,18 @@ class RecipesWidget extends StatelessWidget {
                   borderRadius: BorderRadius.circular(14),
                 ),
                 child: ExpansionTile(
+                  expandedAlignment: Alignment.topLeft,
+                  childrenPadding: EdgeInsets.symmetric(horizontal: 80),
                   title: Text(
                     recipe.name,
                     style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                     ),
+                  ),
+                  leading: IconButton(
+                    icon: const Icon(Icons.add),
+                    onPressed: () {},
                   ),
                   shape: Border(), // Remove divider lines
                   children: [

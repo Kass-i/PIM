@@ -1,5 +1,7 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:recipe_and_shopping_list/firebase_options.dart';
 import 'package:recipe_and_shopping_list/pages/cart_page.dart';
 import 'package:recipe_and_shopping_list/pages/new_recipe_page.dart';
 import 'package:recipe_and_shopping_list/pages/recipes_page.dart';
@@ -8,7 +10,10 @@ import 'package:recipe_and_shopping_list/providers/recipes_provider.dart';
 import 'package:recipe_and_shopping_list/themes.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
   runApp(
     MultiProvider(
       providers: [

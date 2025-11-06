@@ -31,10 +31,13 @@ class _ShoppingListPageState extends State<ShoppingListPage> {
       body: Column(
         children: [
           Expanded(
-            child: ListView(
-              children: grouped.entries.map((entry) {
+            child: ListView.builder(
+              itemCount: grouped.length,
+              itemBuilder: (context, index) {
+                final entry = grouped.entries.elementAt(index);
                 final tag = entry.key;
                 final ingredients = entry.value;
+
                 return Card(
                   margin: const EdgeInsets.all(12),
                   elevation: 3,
@@ -84,7 +87,7 @@ class _ShoppingListPageState extends State<ShoppingListPage> {
                     ],
                   ),
                 );
-              }).toList(),
+              },
             ),
           ),
 

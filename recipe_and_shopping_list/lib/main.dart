@@ -7,6 +7,7 @@ import 'package:recipe_and_shopping_list/pages/new_recipe_page.dart';
 import 'package:recipe_and_shopping_list/pages/recipes_page.dart';
 import 'package:recipe_and_shopping_list/providers/cart_provider.dart';
 import 'package:recipe_and_shopping_list/providers/recipes_provider.dart';
+import 'package:recipe_and_shopping_list/providers/auth_provider.dart';
 import 'package:recipe_and_shopping_list/themes.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -19,6 +20,7 @@ Future<void> main() async {
       providers: [
         ChangeNotifierProvider(create: (_) => RecipesProvider()),
         ChangeNotifierProvider(create: (_) => CartProvider()),
+        ChangeNotifierProvider(create: (_) => AuthProvider()),
       ],
       child: const MainApp(),
     ),
@@ -112,7 +114,7 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   int _selectedIndex = 0;
 
-  static const List<Widget> _widgetOptions = <Widget>[
+  static const List<Widget> _widgetOptions = [
     RecipesPage(),
     NewRecipePage(),
     ShoppingListPage(),
@@ -129,6 +131,8 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     final isDark = widget.themeMode == ThemeMode.dark;
+    final authService = Provider.of<AuthProvider>(context);
+    final user = authService.currentUser;
 
     return Scaffold(
       body: Container(child: _widgetOptions.elementAt(_selectedIndex)),
@@ -160,14 +164,14 @@ class _HomeState extends State<Home> {
                 color: Theme.of(context).colorScheme.inversePrimary,
               ),
               accountName: Text(
-                "Kasia X",
+                user?.displayName ?? "Guest",
                 style: TextStyle(
                   fontSize: 20,
                   color: Theme.of(context).colorScheme.onPrimaryContainer,
                 ),
               ),
               accountEmail: Text(
-                "kasia@gmail.com",
+                user?.email ?? "",
                 style: TextStyle(
                   color: Theme.of(context).colorScheme.onPrimaryContainer,
                 ),
@@ -175,13 +179,16 @@ class _HomeState extends State<Home> {
               currentAccountPictureSize: Size.square(50),
               currentAccountPicture: CircleAvatar(
                 backgroundColor: Theme.of(context).colorScheme.primary,
-                child: Text(
-                  "K",
-                  style: TextStyle(
-                    fontSize: 30,
-                    color: Theme.of(context).colorScheme.inversePrimary,
-                  ),
-                ),
+                foregroundImage: user?.photoURL != null
+                    ? NetworkImage(user!.photoURL!)
+                    : null,
+                child: user?.photoURL == null
+                    ? Icon(
+                        Icons.person,
+                        size: 40,
+                        color: Theme.of(context).colorScheme.inversePrimary,
+                      )
+                    : null,
               ),
             ),
             ListTile(
@@ -191,8 +198,12 @@ class _HomeState extends State<Home> {
             ),
             ListTile(
               leading: const Icon(Icons.login),
-              title: const Text('Login'),
-              onTap: () {},
+              title: Text(user == null ? 'Login' : "Logout"),
+              onTap: () {
+                user == null
+                    ? authService.signInWithGoogle()
+                    : authService.signOut();
+              },
             ),
             const Divider(),
             SwitchListTile(

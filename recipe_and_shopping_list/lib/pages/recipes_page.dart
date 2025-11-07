@@ -7,8 +7,8 @@ class RecipesPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final provider = Provider.of<RecipesProvider>(context);
-    final recipes = provider.recipes;
+    final recipeProvider = Provider.of<RecipesProvider>(context);
+    final recipes = recipeProvider.recipes;
 
     return Scaffold(
       body: recipes.isEmpty
@@ -64,6 +64,17 @@ class RecipesPage extends StatelessWidget {
                             ),
                           ),
                           Text(recipe.directions),
+                          const SizedBox(height: 8),
+
+                          // TODO: change it
+                          Center(
+                            child: IconButton(
+                              icon: const Icon(Icons.delete),
+                              onPressed: () {
+                                recipeProvider.deleteRecipe(recipe.name);
+                              },
+                            ),
+                          ),
                           const SizedBox(height: 16),
                         ],
                       ),

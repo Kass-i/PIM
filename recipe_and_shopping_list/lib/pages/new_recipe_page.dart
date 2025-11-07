@@ -140,13 +140,16 @@ class _NewRecipePageState extends State<NewRecipePage> {
                 icon: const Icon(Icons.save),
                 label: const Text("Save"),
                 onPressed: () {
+                  String message;
                   if (_isCorrectRecipe()) {
                     recipeProvider.addRecipe(_createRecipe());
+                    message = "The recipe added successfully";
                   } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text("Fill all recipe fields")),
-                    );
+                    message = "Fill all recipe fields correctly";
                   }
+                  ScaffoldMessenger.of(
+                    context,
+                  ).showSnackBar(SnackBar(content: Text(message)));
                 },
                 style: ElevatedButton.styleFrom(
                   minimumSize: const Size(160, 40),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:recipe_and_shopping_list/providers/cart_provider.dart';
 import 'package:recipe_and_shopping_list/providers/recipes_provider.dart';
 
 class RecipesPage extends StatelessWidget {
@@ -9,6 +10,8 @@ class RecipesPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final recipeProvider = Provider.of<RecipesProvider>(context);
     final recipes = recipeProvider.recipes;
+
+    final cartProvider = Provider.of<CartProvider>(context);
 
     return Scaffold(
       body: recipes.isEmpty
@@ -35,7 +38,14 @@ class RecipesPage extends StatelessWidget {
                     ),
                     leading: IconButton(
                       icon: const Icon(Icons.add),
-                      onPressed: () {},
+                      onPressed: () {
+                        cartProvider.addToCart(recipe.name);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text("The recipe was added to the cart"),
+                          ),
+                        );
+                      },
                     ),
                     shape: Border(), // Remove divider lines
                     children: [

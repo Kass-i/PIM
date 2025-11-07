@@ -28,104 +28,107 @@ class _ShoppingListPageState extends State<ShoppingListPage> {
     }
 
     return Scaffold(
-      body: Column(
-        children: [
-          Expanded(
-            child: ListView.builder(
-              itemCount: grouped.length,
-              itemBuilder: (context, index) {
-                final entry = grouped.entries.elementAt(index);
-                final tag = entry.key;
-                final ingredients = entry.value;
+      body: recipes.isEmpty
+          ? const Center(child: Text("Empty cart"))
+          : Column(
+              children: [
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: grouped.length,
+                    itemBuilder: (context, index) {
+                      final entry = grouped.entries.elementAt(index);
+                      final tag = entry.key;
+                      final ingredients = entry.value;
 
-                return Card(
-                  margin: const EdgeInsets.all(12),
-                  elevation: 3,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(14),
+                      return Card(
+                        margin: const EdgeInsets.all(12),
+                        elevation: 3,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(14),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              tag,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18,
+                              ),
+                            ),
+                            const Divider(),
+                            ...ingredients.map((ingredient) {
+                              final key = "${ingredient.name}-${ingredient.tag}";
+                              final isChecked = _checkedIngredients.contains(key);
+
+                              return ListTile(
+                                title: Text(
+                                  "${ingredient.name} (${ingredient.amount} ${ingredient.unit})",
+                                  style: TextStyle(
+                                    decoration: isChecked
+                                        ? TextDecoration.lineThrough
+                                        : TextDecoration.none,
+                                    color: isChecked
+                                        ? Colors.grey
+                                        : Theme.of(
+                                            context,
+                                          ).textTheme.bodyLarge?.color,
+                                  ),
+                                ),
+                                onTap: () {
+                                  setState(() {
+                                    if (isChecked) {
+                                      _checkedIngredients.remove(key);
+                                    } else {
+                                      _checkedIngredients.add(key);
+                                    }
+                                  });
+                                },
+                              );
+                            }),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+                ),
+
+                // Recipes
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.surfaceContainer,
+                    borderRadius: const BorderRadius.vertical(
+                      top: Radius.circular(14),
+                    ),
                   ),
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        tag,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
+                      const Text(
+                        "Added recipes",
+                        style: TextStyle(
                           fontSize: 18,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
-                      const Divider(),
-                      ...ingredients.map((ingredient) {
-                        final key = "${ingredient.name}-${ingredient.tag}";
-                        final isChecked = _checkedIngredients.contains(key);
-
+                      const SizedBox(height: 8),
+                      ...recipes.map((recipe) {
                         return ListTile(
-                          title: Text(
-                            "${ingredient.name} (${ingredient.amount} ${ingredient.unit})",
-                            style: TextStyle(
-                              decoration: isChecked
-                                  ? TextDecoration.lineThrough
-                                  : TextDecoration.none,
-                              color: isChecked
-                                  ? Colors.grey
-                                  : Theme.of(
-                                      context,
-                                    ).textTheme.bodyLarge?.color,
-                            ),
+                          title: Text(recipe.name),
+                          trailing: IconButton(
+                            icon: const Icon(Icons.delete),
+                            onPressed: () {
+                              provider.removeFromCart(recipe.name);
+                            },
                           ),
-                          onTap: () {
-                            setState(() {
-                              if (isChecked) {
-                                _checkedIngredients.remove(key);
-                              } else {
-                                _checkedIngredients.add(key);
-                              }
-                            });
-                          },
                         );
                       }),
                     ],
                   ),
-                );
-              },
-            ),
-          ),
-
-          // Recipes
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.surfaceContainer,
-              borderRadius: const BorderRadius.vertical(
-                top: Radius.circular(14),
-              ),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  "Added recipes",
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
-                const SizedBox(height: 8),
-                ...recipes.map((recipe) {
-                  return ListTile(
-                    title: Text(recipe.name),
-                    trailing: IconButton(
-                      icon: const Icon(Icons.delete),
-                      onPressed: () {
-                        setState(() {
-                          recipes.remove(recipe);
-                        });
-                      },
-                    ),
-                  );
-                }),
               ],
             ),
-          ),
-        ],
-      ),
     );
   }
 }

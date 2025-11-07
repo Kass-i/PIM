@@ -25,6 +25,8 @@ class _NewRecipePageState extends State<NewRecipePage> {
     "g",
     "dag",
     "kg",
+    "ml",
+    "l",
     "szkl.",
     "łyż.",
     "łyżecz.",

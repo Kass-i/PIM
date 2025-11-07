@@ -22,8 +22,11 @@ Future<void> main() async {
         ChangeNotifierProvider(create: (_) => AuthProvider()),
         ChangeNotifierProxyProvider<AuthProvider, RecipesProvider>(
           create: (_) => RecipesProvider(),
-          update: (_, auth, recipes) =>
-            recipes!..updateUser(auth.currentUser),
+          update: (_, auth, recipes) => recipes!..updateUser(auth.currentUser),
+        ),
+        ChangeNotifierProxyProvider<AuthProvider, CartProvider>(
+          create: (_) => CartProvider(),
+          update: (_, auth, cart) => cart!..updateUser(auth.currentUser),
         ),
       ],
       child: const MainApp(),
@@ -135,8 +138,8 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     final isDark = widget.themeMode == ThemeMode.dark;
-    final authService = Provider.of<AuthProvider>(context);
-    final user = authService.currentUser;
+    final authProvider = Provider.of<AuthProvider>(context);
+    final user = authProvider.currentUser;
 
     return Scaffold(
       body: Container(child: _widgetOptions.elementAt(_selectedIndex)),
@@ -205,8 +208,8 @@ class _HomeState extends State<Home> {
               title: Text(user == null ? 'Login' : "Logout"),
               onTap: () {
                 user == null
-                    ? authService.signInWithGoogle()
-                    : authService.signOut();
+                    ? authProvider.signInWithGoogle()
+                    : authProvider.signOut();
               },
             ),
             const Divider(),

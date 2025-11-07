@@ -1,29 +1,90 @@
 import 'package:flutter/material.dart';
-import 'package:recipe_and_shopping_list/db/ingredient.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:recipe_and_shopping_list/db/recipe.dart';
+import 'package:recipe_and_shopping_list/db/ingredient.dart';
 
 class CartProvider extends ChangeNotifier {
-  final List<Recipe> _cart = [
-    Recipe(
-      name: 'Naleśniki',
-      directions:
-          "1. Znajdź patelnię.\n2. Zrób naleśnika.\n3. Nie zabij się.\n4. Zjedz.",
-      ingredients: [
-        Ingredient(name: 'Mleko', amount: 200, unit: 'ml', tag: 'Biedronka'),
-        Ingredient(name: 'Jajka', amount: 1, unit: 'szt', tag: 'Targ'),
-        Ingredient(name: 'Mąka', amount: 1, unit: 'szklanka', tag: 'Biedronka'),
-      ],
-    ),
-    Recipe(
-      name: 'Herbata',
-      directions:
-          "1. Zagotuj wodę.\n2. Wrzuć torebkę herbaty do kubka.\n3. Wlej wodę do kubka.\n4. Nie oparz się.\n5. Poczekaj z 2 min.",
-      ingredients: [
-        Ingredient(name: 'Torebka herbaty', amount: 1, unit: 'szt', tag: 'Herbaciarnia'),
-        Ingredient(name: 'Woda', amount: 400, unit: 'ml'),
-      ],
-    ),
-  ];
+  final _firestore = FirebaseFirestore.instance;
+  User? _user;
 
-  List<Recipe> get cart => _cart;
+  List<String> _cartIds = [];
+  List<Recipe> _cartRecipes = [];
+
+  List<Recipe> get cart => List.unmodifiable(_cartRecipes);
+
+  void updateUser(User? user) {
+    _user = user;
+    if (_user != null) {
+      loadCart();
+    } else {
+      _cartIds = [];
+      _cartRecipes = [];
+    }
+    notifyListeners();
+  }
+
+  Future<void> addToCart(String recipeId) async {
+    if (!_cartIds.contains(recipeId)) {
+      _cartIds.add(recipeId);
+      await _saveCartToPrefs();
+      await _fetchCartRecipes();
+      notifyListeners();
+    }
+  }
+
+  Future<void> removeFromCart(String recipeId) async {
+    _cartIds.remove(recipeId);
+    await _saveCartToPrefs();
+    await _fetchCartRecipes();
+    notifyListeners();
+  }
+
+  Future<void> loadCart() async {
+    final prefs = await SharedPreferences.getInstance();
+    _cartIds = prefs.getStringList('cart_ids_${_user?.uid}') ?? [];
+    await _fetchCartRecipes();
+  }
+
+  Future<void> _saveCartToPrefs() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setStringList('cart_ids_${_user?.uid}', _cartIds);
+  }
+
+  Future<void> _fetchCartRecipes() async {
+    if (_user == null) return;
+
+    final List<Recipe> updatedCart = [];
+
+    for (final id in _cartIds) {
+      final doc = await _firestore.collection(_user!.uid).doc(id).get();
+      if (doc.exists) {
+        final data = doc.data()!;
+        updatedCart.add(
+          Recipe(
+            name: id,
+            directions: data['directions'],
+            ingredients: (data['ingredients'] as List)
+                .map(
+                  (i) => Ingredient(
+                    name: i['name'],
+                    amount: i['amount'],
+                    unit: i['unit'],
+                    tag: i['tag'],
+                  ),
+                )
+                .toList(),
+          ),
+        );
+      } else {
+        // The recipe has been removed from Firestore so remove it from the cart
+        _cartIds.remove(id);
+        await _saveCartToPrefs();
+      }
+    }
+
+    _cartRecipes = updatedCart;
+    notifyListeners();
+  }
 }

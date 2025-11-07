@@ -18,9 +18,13 @@ Future<void> main() async {
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => RecipesProvider()),
         ChangeNotifierProvider(create: (_) => CartProvider()),
         ChangeNotifierProvider(create: (_) => AuthProvider()),
+        ChangeNotifierProxyProvider<AuthProvider, RecipesProvider>(
+          create: (_) => RecipesProvider(),
+          update: (_, auth, recipes) =>
+            recipes!..updateUser(auth.currentUser),
+        ),
       ],
       child: const MainApp(),
     ),

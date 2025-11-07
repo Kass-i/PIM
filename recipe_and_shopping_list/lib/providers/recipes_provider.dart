@@ -1,29 +1,51 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:recipe_and_shopping_list/db/ingredient.dart';
 import 'package:recipe_and_shopping_list/db/recipe.dart';
 
 class RecipesProvider extends ChangeNotifier {
-  final List<Recipe> _recipes = [
-    Recipe(
-      name: 'Naleśniki',
-      directions:
-          "1. Znajdź patelnię.\n2. Zrób naleśnika.\n3. Nie zabij się.\n4. Zjedz.",
-      ingredients: [
-        Ingredient(name: 'Mleko', amount: 200, unit: 'ml', tag: 'Biedronka'),
-        Ingredient(name: 'Jajka', amount: 1, unit: 'szt', tag: 'Targ'),
-        Ingredient(name: 'Mąka', amount: 1, unit: 'szklanka', tag: 'Biedronka'),
-      ],
-    ),
-    Recipe(
-      name: 'Herbata',
-      directions:
-          "1. Zagotuj wodę.\n2. Wrzuć torebkę herbaty do kubka.\n3. Wlej wodę do kubka.\n4. Nie oparz się.\n5. Poczekaj z 2 min.",
-      ingredients: [
-        Ingredient(name: 'Torebka herbaty', amount: 1, unit: 'szt', tag: 'Herbaciarnia'),
-        Ingredient(name: 'Woda', amount: 400, unit: 'ml'),
-      ],
-    ),
-  ];
+  final _firestore = FirebaseFirestore.instance;
+  User? _user;
 
+  List<Recipe> _recipes = [];
   List<Recipe> get recipes => _recipes;
+
+  void updateUser(User? user) {
+    if (_user?.uid == user?.uid) return; // Sanity check
+    _user = user;
+
+    if (_user != null) {
+      fetchRecipes();
+    } else {
+      _recipes = [];
+    }
+    notifyListeners();
+  }
+
+  Future<void> fetchRecipes() async {
+    if (_user == null) return; // Sanity check vol 2
+
+    final snapshot = await _firestore.collection(_user!.uid).get();
+
+    _recipes = snapshot.docs.map((doc) {
+      final data = doc.data();
+      return Recipe(
+        name: doc.id,
+        directions: data['directions'] ?? '',
+        ingredients: (data['ingredients'] as List)
+            .map(
+              (i) => Ingredient(
+                name: i['name'],
+                amount: i['amount'],
+                unit: i['unit'],
+                tag: i['tag'],
+              ),
+            )
+            .toList(),
+      );
+    }).toList();
+
+    notifyListeners();
+  }
 }

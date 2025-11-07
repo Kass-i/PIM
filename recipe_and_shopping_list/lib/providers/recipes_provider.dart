@@ -48,4 +48,23 @@ class RecipesProvider extends ChangeNotifier {
 
     notifyListeners();
   }
+
+  Future<void> addRecipe(Recipe recipe) async {
+    if (_user == null) return;
+
+    await _firestore.collection(_user!.uid).doc(recipe.name).set({
+      'directions': recipe.directions,
+      'ingredients': recipe.ingredients.map((i) {
+        return {
+          'name': i.name,
+          'amount': i.amount,
+          'unit': i.unit,
+          'tag': i.tag,
+        };
+      }).toList(),
+    });
+
+    fetchRecipes();
+    notifyListeners();
+  }
 }

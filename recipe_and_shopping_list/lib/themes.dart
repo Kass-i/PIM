@@ -21,6 +21,7 @@ ThemeData lightTheme = ThemeData(
   ),
   appBarTheme: AppBarTheme(backgroundColor: lightColorScheme.inversePrimary),
   cardTheme: CardThemeData(color: lightColorScheme.secondaryContainer),
+  snackBarTheme: SnackBarThemeData(backgroundColor: lightColorScheme.primary),
 );
 
 ThemeData darkTheme = ThemeData(
@@ -36,4 +37,8 @@ ThemeData darkTheme = ThemeData(
   ),
   appBarTheme: AppBarTheme(backgroundColor: darkColorScheme.onPrimaryFixed),
   cardTheme: CardThemeData(color: darkColorScheme.onPrimary),
+  snackBarTheme: SnackBarThemeData(
+    contentTextStyle: TextStyle(color: darkColorScheme.onPrimaryContainer),
+    backgroundColor: darkColorScheme.primaryContainer,
+  ),
 );

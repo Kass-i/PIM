@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:recipe_and_shopping_list/db/ingredient.dart';
+import 'package:recipe_and_shopping_list/db/recipe.dart';
+import 'package:recipe_and_shopping_list/providers/recipes_provider.dart';
 import 'package:recipe_and_shopping_list/widgets/ingredient_row.dart';
 
 class NewRecipePage extends StatefulWidget {
@@ -39,8 +42,38 @@ class _NewRecipePageState extends State<NewRecipePage> {
     });
   }
 
+  bool _isCorrectRecipe() {
+    if (_recipeNameController.text.isEmpty ||
+        _descriptionController.text.isEmpty ||
+        ingredients.isEmpty) {
+      return false;
+    }
+
+    for (final ingredient in ingredients) {
+      if (ingredient.name.isEmpty ||
+          ingredient.amount == null ||
+          ingredient.unit.isEmpty) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  Recipe _createRecipe() {
+    var recipe = Recipe(
+      name: _recipeNameController.text,
+      directions: _descriptionController.text,
+      ingredients: ingredients,
+    );
+
+    return recipe;
+  }
+
   @override
   Widget build(BuildContext context) {
+    final recipeProvider = Provider.of<RecipesProvider>(context);
+
     return Scaffold(
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(12),
@@ -72,7 +105,7 @@ class _NewRecipePageState extends State<NewRecipePage> {
                 units: units,
                 onDelete: () => _removeIngredient(index),
                 onNameChanged: (val) => ingredient.name = val,
-                onAmountChanged: (val) => ingredient.amount = val as int,
+                onAmountChanged: (val) => ingredient.amount = int.tryParse(val),
                 onUnitChanged: (val) => ingredient.unit = val,
                 onTagChanged: (val) => ingredient.tag = val,
               );
@@ -106,7 +139,15 @@ class _NewRecipePageState extends State<NewRecipePage> {
               child: ElevatedButton.icon(
                 icon: const Icon(Icons.save),
                 label: const Text("Save"),
-                onPressed: () {},
+                onPressed: () {
+                  if (_isCorrectRecipe()) {
+                    recipeProvider.addRecipe(_createRecipe());
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text("Fill all recipe fields")),
+                    );
+                  }
+                },
                 style: ElevatedButton.styleFrom(
                   minimumSize: const Size(160, 40),
                 ),

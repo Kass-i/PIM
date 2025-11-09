@@ -68,7 +68,7 @@ class RecipesProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-    Future<void> deleteRecipe(String recipeName) async {
+  Future<void> deleteRecipe(String recipeName) async {
     if (_user == null) return;
 
     await _firestore.collection(_user!.uid).doc(recipeName).delete();

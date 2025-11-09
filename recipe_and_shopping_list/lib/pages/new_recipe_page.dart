@@ -145,7 +145,11 @@ class _NewRecipePageState extends State<NewRecipePage> {
                   String message;
                   if (_isCorrectRecipe()) {
                     recipeProvider.addRecipe(_createRecipe());
-                    message = "The recipe added successfully";
+                    if (recipeProvider.recipes.isEmpty) {
+                      message = "Login to add the recipe!";
+                    } else {
+                      message = "The recipe added successfully";
+                    }
                   } else {
                     message = "Fill all recipe fields correctly";
                   }

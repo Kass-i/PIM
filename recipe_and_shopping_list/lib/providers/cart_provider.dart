@@ -95,7 +95,7 @@ class CartProvider extends ChangeNotifier {
                 .map(
                   (i) => Ingredient(
                     name: i['name'],
-                    amount: i['amount'],
+                    amount: i['amount'] * _cartQuantities[id],
                     unit: i['unit'],
                     tag: i['tag'],
                   ),

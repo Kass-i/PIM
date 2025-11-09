@@ -22,9 +22,25 @@ class _ShoppingListPageState extends State<ShoppingListPage> {
 
     final Map<String, List<Ingredient>> grouped = {};
     for (final ingredient in allIngredients) {
-      var tag = ingredient.tag ?? "No tag";
+      final tag = ingredient.tag ?? "No tag";
       grouped.putIfAbsent(tag, () => []);
-      grouped[tag]!.add(ingredient);
+
+      // Look for an existing ingredient with the same name and unit
+      final existing = grouped[tag]!.firstWhere(
+        (i) =>
+            i.name.toLowerCase() == ingredient.name.toLowerCase() &&
+            i.unit.toLowerCase() == ingredient.unit.toLowerCase(),
+        orElse: () => Ingredient(name: '', amount: 0, unit: '', tag: tag),
+      );
+
+      // Ingredient with the same name and unit was not found - add as new ingredient
+      if (existing.name.isEmpty) {
+        grouped[tag]!.add(ingredient);
+      } else {
+        // Ingredient with the same name and unit was found - add amounts
+        final newAmount = existing.amount! + ingredient.amount!;
+        existing.amount = newAmount;
+      }
     }
 
     return Scaffold(

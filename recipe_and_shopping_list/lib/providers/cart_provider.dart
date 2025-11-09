@@ -13,7 +13,12 @@ class CartProvider extends ChangeNotifier {
   Map<String, int> _cartQuantities = {};
   List<Recipe> _cartRecipes = [];
 
+  Set<String> _checkedIngredients = {};
+  bool _isEditMode = true;
+
   List<Recipe> get cart => List.unmodifiable(_cartRecipes);
+  Set<String> get checkedIngredients => _checkedIngredients;
+  bool get isEditMode => _isEditMode;
 
   int getQuantity(String recipeId) => _cartQuantities[recipeId] ?? 0;
 
@@ -21,9 +26,12 @@ class CartProvider extends ChangeNotifier {
     _user = user;
     if (_user != null) {
       loadCart();
+      loadSettings();
     } else {
       _cartQuantities = {};
       _cartRecipes = [];
+      _checkedIngredients.clear();
+      _isEditMode = true;
     }
     notifyListeners();
   }
@@ -111,6 +119,49 @@ class CartProvider extends ChangeNotifier {
     }
 
     _cartRecipes = updatedCart;
+    notifyListeners();
+  }
+
+  Future<void> loadSettings() async {
+    final prefs = await SharedPreferences.getInstance();
+    final checkedJson = prefs.getString('checked_ingredients_${_user?.uid}');
+    if (checkedJson != null) {
+      _checkedIngredients = (jsonDecode(checkedJson) as List<dynamic>)
+          .cast<String>()
+          .toSet();
+    } else {
+      _checkedIngredients = {};
+    }
+
+    _isEditMode = prefs.getBool('is_edit_mode_${_user?.uid}') ?? true;
+    notifyListeners();
+  }
+
+  Future<void> saveSettings() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(
+      'checked_ingredients_${_user?.uid}',
+      jsonEncode(_checkedIngredients.toList()),
+    );
+    await prefs.setBool('is_edit_mode_${_user?.uid}', _isEditMode);
+  }
+
+  void toggleEditMode(bool value) {
+    _isEditMode = value;
+    if (_isEditMode) {
+      _checkedIngredients.clear();
+    }
+    saveSettings();
+    notifyListeners();
+  }
+
+  void toggleIngredientChecked(String key) {
+    if (_checkedIngredients.contains(key)) {
+      _checkedIngredients.remove(key);
+    } else {
+      _checkedIngredients.add(key);
+    }
+    saveSettings();
     notifyListeners();
   }
 }

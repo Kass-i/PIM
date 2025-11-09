@@ -3,20 +3,14 @@ import 'package:provider/provider.dart';
 import 'package:recipe_and_shopping_list/db/ingredient.dart';
 import 'package:recipe_and_shopping_list/providers/cart_provider.dart';
 
-class ShoppingListPage extends StatefulWidget {
+class ShoppingListPage extends StatelessWidget {
   const ShoppingListPage({super.key});
-
-  @override
-  State<ShoppingListPage> createState() => _ShoppingListPageState();
-}
-
-class _ShoppingListPageState extends State<ShoppingListPage> {
-  final Set<String> _checkedIngredients = {};
 
   @override
   Widget build(BuildContext context) {
     final cartProvider = Provider.of<CartProvider>(context);
     final recipes = cartProvider.cart;
+    final isEditMode = cartProvider.isEditMode;
 
     final allIngredients = recipes.expand((r) => r.ingredients).toList();
 
@@ -38,8 +32,15 @@ class _ShoppingListPageState extends State<ShoppingListPage> {
         grouped[tag]!.add(ingredient);
       } else {
         // Ingredient with the same name and unit was found - add amounts
-        final newAmount = existing.amount! + ingredient.amount!;
-        existing.amount = newAmount;
+        final updated = Ingredient(
+          name: existing.name,
+          amount: existing.amount! + ingredient.amount!,
+          unit: existing.unit,
+          tag: existing.tag,
+        );
+
+        final idx = grouped[tag]!.indexOf(existing);
+        grouped[tag]![idx] = updated;
       }
     }
 
@@ -49,6 +50,15 @@ class _ShoppingListPageState extends State<ShoppingListPage> {
           : SingleChildScrollView(
               child: Column(
                 children: [
+                  Row(
+                    children: [
+                      const Text("Edit mode"),
+                      Switch(
+                        value: isEditMode,
+                        onChanged: cartProvider.toggleEditMode,
+                      ),
+                    ],
+                  ),
                   ListView.builder(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
@@ -76,8 +86,10 @@ class _ShoppingListPageState extends State<ShoppingListPage> {
                             ),
                             const Divider(),
                             ...ingredients.map((ingredient) {
-                              final key = "${ingredient.name}-${ingredient.tag}";
-                              final isChecked = _checkedIngredients.contains(key);
+                              final key =
+                                  "${ingredient.name}-${ingredient.tag}-${ingredient.unit}";
+                              final isChecked = cartProvider.checkedIngredients
+                                  .contains(key);
 
                               return ListTile(
                                 title: Text(
@@ -93,15 +105,10 @@ class _ShoppingListPageState extends State<ShoppingListPage> {
                                           ).textTheme.bodyLarge?.color,
                                   ),
                                 ),
-                                onTap: () {
-                                  setState(() {
-                                    if (isChecked) {
-                                      _checkedIngredients.remove(key);
-                                    } else {
-                                      _checkedIngredients.add(key);
-                                    }
-                                  });
-                                },
+                                onTap: isEditMode
+                                    ? null // Cannot check
+                                    : () => cartProvider
+                                          .toggleIngredientChecked(key),
                               );
                             }),
                           ],
@@ -111,58 +118,59 @@ class _ShoppingListPageState extends State<ShoppingListPage> {
                   ),
 
                   // Recipes
-                  Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.surfaceContainer,
-                      borderRadius: const BorderRadius.vertical(
-                        top: Radius.circular(14),
+                  if (isEditMode)
+                    Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.surfaceContainer,
+                        borderRadius: const BorderRadius.vertical(
+                          top: Radius.circular(14),
+                        ),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            "Added recipes",
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          ...recipes.map((recipe) {
+                            final quantity = cartProvider.getQuantity(
+                              recipe.name,
+                            );
+
+                            return ListTile(
+                              title: Text(recipe.name),
+                              trailing: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  IconButton(
+                                    icon: const Icon(Icons.remove),
+                                    onPressed: () => cartProvider
+                                        .removeOneFromCart(recipe.name),
+                                  ),
+                                  Text('$quantity'),
+                                  IconButton(
+                                    icon: const Icon(Icons.add),
+                                    onPressed: () =>
+                                        cartProvider.addToCart(recipe.name),
+                                  ),
+                                  IconButton(
+                                    icon: const Icon(Icons.delete),
+                                    onPressed: () => cartProvider
+                                        .removeRecipeCompletely(recipe.name),
+                                  ),
+                                ],
+                              ),
+                            );
+                          }),
+                        ],
                       ),
                     ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          "Added recipes",
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        ...recipes.map((recipe) {
-                          final quantity = cartProvider.getQuantity(
-                            recipe.name,
-                          );
-
-                          return ListTile(
-                            title: Text(recipe.name),
-                            trailing: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                IconButton(
-                                  icon: const Icon(Icons.remove),
-                                  onPressed: () => cartProvider
-                                      .removeOneFromCart(recipe.name),
-                                ),
-                                Text('$quantity'),
-                                IconButton(
-                                  icon: const Icon(Icons.add),
-                                  onPressed: () =>
-                                      cartProvider.addToCart(recipe.name),
-                                ),
-                                IconButton(
-                                  icon: const Icon(Icons.delete),
-                                  onPressed: () => cartProvider
-                                      .removeRecipeCompletely(recipe.name),
-                                ),
-                              ],
-                            ),
-                          );
-                        }),
-                      ],
-                    ),
-                  ),
                 ],
               ),
             ),

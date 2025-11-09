@@ -28,6 +28,11 @@ class RecipesPage extends StatelessWidget {
       );
     }
 
+    void deleteRecipe(String recipeName) {
+      recipeProvider.deleteRecipe(recipeName);
+      cartProvider.removeRecipeCompletely(recipeName);
+    }
+
     return Scaffold(
       body: recipes.isEmpty
           ? const Center(child: Text("No recipes"))
@@ -88,8 +93,7 @@ class RecipesPage extends StatelessWidget {
                           Center(
                             child: IconButton(
                               icon: const Icon(Icons.delete),
-                              onPressed: () =>
-                                  recipeProvider.deleteRecipe(recipe.name),
+                              onPressed: () => deleteRecipe(recipe.name),
                             ),
                           ),
                           const SizedBox(height: 16),

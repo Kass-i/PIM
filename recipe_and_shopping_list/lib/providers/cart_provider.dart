@@ -58,6 +58,8 @@ class CartProvider extends ChangeNotifier {
   }
 
   Future<void> removeRecipeCompletely(String recipeId) async {
+    if (!_cartQuantities.containsKey(recipeId)) return;
+    
     _cartQuantities.remove(recipeId);
     await _saveCartToPrefs();
     await _fetchCartRecipes();

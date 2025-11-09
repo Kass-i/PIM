@@ -50,14 +50,11 @@ class ShoppingListPage extends StatelessWidget {
           : SingleChildScrollView(
               child: Column(
                 children: [
-                  Row(
-                    children: [
-                      const Text("Edit mode"),
-                      Switch(
-                        value: isEditMode,
-                        onChanged: cartProvider.toggleEditMode,
-                      ),
-                    ],
+                  SwitchListTile(
+                    title: const Text('Edit mode'),
+                    secondary: const Icon(Icons.edit_outlined),
+                    value: isEditMode,
+                    onChanged: cartProvider.toggleEditMode,
                   ),
                   ListView.builder(
                     shrinkWrap: true,

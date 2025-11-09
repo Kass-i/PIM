@@ -12,6 +12,21 @@ class RecipesPage extends StatelessWidget {
     final recipes = recipeProvider.recipes;
 
     final cartProvider = Provider.of<CartProvider>(context);
+    final isEditMode = cartProvider.isEditMode;
+
+    void addToCart(String recipeName) {
+      if (!isEditMode) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("The cart is not in the edit mode!")),
+        );
+        return;
+      }
+
+      cartProvider.addToCart(recipeName);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("The recipe was added to the cart")),
+      );
+    }
 
     return Scaffold(
       body: recipes.isEmpty
@@ -38,14 +53,7 @@ class RecipesPage extends StatelessWidget {
                     ),
                     leading: IconButton(
                       icon: const Icon(Icons.add),
-                      onPressed: () {
-                        cartProvider.addToCart(recipe.name);
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text("The recipe was added to the cart"),
-                          ),
-                        );
-                      },
+                      onPressed: () => addToCart(recipe.name),
                     ),
                     shape: Border(), // Remove divider lines
                     children: [
@@ -80,9 +88,8 @@ class RecipesPage extends StatelessWidget {
                           Center(
                             child: IconButton(
                               icon: const Icon(Icons.delete),
-                              onPressed: () {
-                                recipeProvider.deleteRecipe(recipe.name);
-                              },
+                              onPressed: () =>
+                                  recipeProvider.deleteRecipe(recipe.name),
                             ),
                           ),
                           const SizedBox(height: 16),

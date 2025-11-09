@@ -76,4 +76,34 @@ class RecipesProvider extends ChangeNotifier {
     fetchRecipes();
     notifyListeners();
   }
+
+  Set<String> get allTags {
+    final tags = <String>{};
+
+    for (final recipe in _recipes) {
+      for (final ingredient in recipe.ingredients) {
+        final tag = ingredient.tag?.trim();
+        if (tag != null && tag.isNotEmpty) {
+          tags.add(tag);
+        }
+      }
+    }
+
+    print(tags);
+    return tags;
+  }
+
+  Set<String> get allIngredientNames {
+    final names = <String>{};
+
+    for (final recipe in _recipes) {
+      for (final ingredient in recipe.ingredients) {
+        final name = ingredient.name.trim();
+        if (name.isNotEmpty) names.add(name);
+      }
+    }
+
+    print(names);
+    return names;
+  }
 }

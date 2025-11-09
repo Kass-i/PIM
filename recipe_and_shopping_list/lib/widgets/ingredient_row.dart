@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:recipe_and_shopping_list/db/ingredient.dart';
+import 'package:recipe_and_shopping_list/providers/recipes_provider.dart';
+import 'package:recipe_and_shopping_list/widgets/autocomplete_filed.dart';
 
 class IngredientRow extends StatelessWidget {
   final Ingredient ingredient;
@@ -23,6 +26,10 @@ class IngredientRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final recipeProvider = Provider.of<RecipesProvider>(context);
+    final tags = recipeProvider.allTags;
+    final ingredients = recipeProvider.allIngredientNames;
+
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
       elevation: 3,
@@ -36,14 +43,15 @@ class IngredientRow extends StatelessWidget {
             Row(
               children: [
                 Expanded(
-                  child: TextField(
-                    decoration: InputDecoration(
+                  child: AutocompleteField(
+                    availableOptions: ingredients,
+                    onChanged: onNameChanged,
+                    inputDecoration: InputDecoration(
                       labelText: "Name",
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(14),
                       ),
                     ),
-                    onChanged: onNameChanged,
                   ),
                 ),
                 const SizedBox(width: 8),
@@ -91,8 +99,10 @@ class IngredientRow extends StatelessWidget {
                 const SizedBox(width: 8),
                 Expanded(
                   flex: 6,
-                  child: TextField(
-                    decoration: InputDecoration(
+                  child: AutocompleteField(
+                    availableOptions: tags,
+                    onChanged: onTagChanged,
+                    inputDecoration: InputDecoration(
                       labelText: "Tag",
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(28),
@@ -100,7 +110,6 @@ class IngredientRow extends StatelessWidget {
                       filled: true,
                       fillColor: Theme.of(context).colorScheme.primaryContainer,
                     ),
-                    onChanged: onTagChanged,
                   ),
                 ),
               ],

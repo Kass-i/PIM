@@ -15,8 +15,8 @@ class _ShoppingListPageState extends State<ShoppingListPage> {
 
   @override
   Widget build(BuildContext context) {
-    final provider = Provider.of<CartProvider>(context);
-    final recipes = provider.cart;
+    final cartProvider = Provider.of<CartProvider>(context);
+    final recipes = cartProvider.cart;
 
     final allIngredients = recipes.expand((r) => r.ingredients).toList();
 
@@ -30,10 +30,12 @@ class _ShoppingListPageState extends State<ShoppingListPage> {
     return Scaffold(
       body: recipes.isEmpty
           ? const Center(child: Text("Empty cart"))
-          : Column(
-              children: [
-                Expanded(
-                  child: ListView.builder(
+          : SingleChildScrollView(
+              child: Column(
+                children: [
+                  ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
                     itemCount: grouped.length,
                     itemBuilder: (context, index) {
                       final entry = grouped.entries.elementAt(index);
@@ -91,43 +93,62 @@ class _ShoppingListPageState extends State<ShoppingListPage> {
                       );
                     },
                   ),
-                ),
 
-                // Recipes
-                Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.surfaceContainer,
-                    borderRadius: const BorderRadius.vertical(
-                      top: Radius.circular(14),
+                  // Recipes
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.surfaceContainer,
+                      borderRadius: const BorderRadius.vertical(
+                        top: Radius.circular(14),
+                      ),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          "Added recipes",
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        ...recipes.map((recipe) {
+                          final quantity = cartProvider.getQuantity(
+                            recipe.name,
+                          );
+
+                          return ListTile(
+                            title: Text(recipe.name),
+                            trailing: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                IconButton(
+                                  icon: const Icon(Icons.remove),
+                                  onPressed: () => cartProvider
+                                      .removeOneFromCart(recipe.name),
+                                ),
+                                Text('$quantity'),
+                                IconButton(
+                                  icon: const Icon(Icons.add),
+                                  onPressed: () =>
+                                      cartProvider.addToCart(recipe.name),
+                                ),
+                                IconButton(
+                                  icon: const Icon(Icons.delete),
+                                  onPressed: () => cartProvider
+                                      .removeRecipeCompletely(recipe.name),
+                                ),
+                              ],
+                            ),
+                          );
+                        }),
+                      ],
                     ),
                   ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        "Added recipes",
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      ...recipes.map((recipe) {
-                        return ListTile(
-                          title: Text(recipe.name),
-                          trailing: IconButton(
-                            icon: const Icon(Icons.delete),
-                            onPressed: () {
-                              provider.removeFromCart(recipe.name);
-                            },
-                          ),
-                        );
-                      }),
-                    ],
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
     );
   }

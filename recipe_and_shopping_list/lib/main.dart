@@ -25,7 +25,7 @@ Future<void> main() async {
           update: (_, auth, recipes) => recipes!..updateUser(auth.currentUser),
         ),
         ChangeNotifierProxyProvider<AuthProvider, CartProvider>(
-          create: (_) => CartProvider(),
+          create: (_) => CartProvider()..loadCart(),
           update: (_, auth, cart) => cart!..updateUser(auth.currentUser),
         ),
       ],

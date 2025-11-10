@@ -44,6 +44,38 @@ class ShoppingListPage extends StatelessWidget {
       }
     }
 
+    void toggleEditMode(bool isEditMode) {
+      if (!isEditMode) {
+        cartProvider.toggleEditMode(isEditMode);
+        return;
+      }
+
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text("Are you sure?"),
+          content: const Text(
+            "When you turn on edit mode, all ingredients will become unchecked.",
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                cartProvider.toggleEditMode(isEditMode);
+                Navigator.pop(context);
+              },
+              child: const Text("Yes"),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text("No"),
+            ),
+          ],
+        ),
+      );
+    }
+
     return Scaffold(
       body: recipes.isEmpty
           ? const Center(child: Text("Empty cart"))
@@ -54,7 +86,7 @@ class ShoppingListPage extends StatelessWidget {
                     title: const Text('Edit mode'),
                     secondary: const Icon(Icons.edit_outlined),
                     value: isEditMode,
-                    onChanged: cartProvider.toggleEditMode,
+                    onChanged: toggleEditMode,
                   ),
                   ListView.builder(
                     shrinkWrap: true,

@@ -35,8 +35,28 @@ class RecipesPage extends StatelessWidget {
     }
 
     void deleteRecipe(String recipeName) {
-      recipeProvider.deleteRecipe(recipeName);
-      cartProvider.removeRecipeCompletely(recipeName);
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text("Are you sure?"),
+          actions: [
+            TextButton(
+              onPressed: () {
+                recipeProvider.deleteRecipe(recipeName);
+                cartProvider.removeRecipeCompletely(recipeName);
+                Navigator.pop(context);
+              },
+              child: const Text("Yes"),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text("No"),
+            ),
+          ],
+        ),
+      );
     }
 
     return Scaffold(
@@ -95,7 +115,6 @@ class RecipesPage extends StatelessWidget {
                           Text(recipe.directions),
                           const SizedBox(height: 8),
 
-                          // TODO: change it
                           Center(
                             child: IconButton(
                               icon: const Icon(Icons.delete),

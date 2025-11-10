@@ -76,6 +76,39 @@ class _NewRecipePageState extends State<NewRecipePage> {
   Widget build(BuildContext context) {
     final recipeProvider = Provider.of<RecipesProvider>(context);
 
+    void saveRecipe() {
+      String message;
+      bool error = false;
+      if (_isCorrectRecipe()) {
+        recipeProvider.addRecipe(_createRecipe());
+        if (recipeProvider.recipes.isEmpty) {
+          message = "Login to add the recipe!";
+          error = true;
+        } else {
+          message = "The recipe added successfully";
+        }
+      } else {
+        message = "Fill all recipe fields correctly";
+        error = true;
+      }
+
+      error
+          ? ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  message,
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.onError,
+                  ),
+                ),
+                backgroundColor: Theme.of(context).colorScheme.error,
+              ),
+            )
+          : ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(SnackBar(content: Text(message)));
+    }
+
     return Scaffold(
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(12),
@@ -141,22 +174,7 @@ class _NewRecipePageState extends State<NewRecipePage> {
               child: ElevatedButton.icon(
                 icon: const Icon(Icons.save),
                 label: const Text("Save"),
-                onPressed: () {
-                  String message;
-                  if (_isCorrectRecipe()) {
-                    recipeProvider.addRecipe(_createRecipe());
-                    if (recipeProvider.recipes.isEmpty) {
-                      message = "Login to add the recipe!";
-                    } else {
-                      message = "The recipe added successfully";
-                    }
-                  } else {
-                    message = "Fill all recipe fields correctly";
-                  }
-                  ScaffoldMessenger.of(
-                    context,
-                  ).showSnackBar(SnackBar(content: Text(message)));
-                },
+                onPressed: () => saveRecipe(),
                 style: ElevatedButton.styleFrom(
                   minimumSize: const Size(160, 40),
                 ),

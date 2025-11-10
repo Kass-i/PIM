@@ -17,7 +17,13 @@ class RecipesPage extends StatelessWidget {
     void addToCart(String recipeName) {
       if (!isEditMode) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("The cart is not in the edit mode!")),
+          SnackBar(
+            content: Text(
+              "The cart is not in the edit mode!",
+              style: TextStyle(color: Theme.of(context).colorScheme.onError),
+            ),
+            backgroundColor: Theme.of(context).colorScheme.error,
+          ),
         );
         return;
       }

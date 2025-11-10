@@ -16,7 +16,7 @@ class CartProvider extends ChangeNotifier {
   Set<String> _checkedIngredients = {};
   bool _isEditMode = true;
 
-  List<Recipe> get cart => List.unmodifiable(_cartRecipes);
+  List<Recipe> get cart => _cartRecipes;
   Set<String> get checkedIngredients => _checkedIngredients;
   bool get isEditMode => _isEditMode;
 
@@ -84,8 +84,6 @@ class CartProvider extends ChangeNotifier {
     final prefs = await SharedPreferences.getInstance();
     final jsonString = jsonEncode(_cartQuantities);
     await prefs.setString('cart_data_${_user?.uid}', jsonString);
-    print("\n");
-    print(prefs.getString('cart_data_${_user?.uid}'));
   }
 
   Future<void> _fetchCartRecipes() async {

@@ -140,11 +140,11 @@ class _HomeState extends State<Home> {
                     : null,
               ),
             ),
-            ListTile(
-              leading: const Icon(Icons.settings),
-              title: const Text('Settings'),
-              onTap: () {},
-            ),
+            // ListTile(
+            //   leading: const Icon(Icons.settings),
+            //   title: const Text('Settings'),
+            //   onTap: () {},
+            // ),
             ListTile(
               leading: const Icon(Icons.login),
               title: Text(user == null ? 'Login' : "Logout"),

@@ -16,11 +16,11 @@ class _NewRecipePageState extends State<NewRecipePage> {
   final TextEditingController _recipeNameController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
 
-  List<Ingredient> ingredients = [
+  final List<Ingredient> _ingredients = [
     Ingredient(name: '', amount: null, unit: 'szt'),
   ];
 
-  final List<String> units = [
+  final List<String> _units = [
     "szt",
     "g",
     "dag",
@@ -34,24 +34,24 @@ class _NewRecipePageState extends State<NewRecipePage> {
 
   void _addIngredient() {
     setState(() {
-      ingredients.add(Ingredient(name: '', amount: null, unit: 'szt'));
+      _ingredients.add(Ingredient(name: '', amount: null, unit: 'szt'));
     });
   }
 
   void _removeIngredient(int index) {
     setState(() {
-      ingredients.removeAt(index);
+      _ingredients.removeAt(index);
     });
   }
 
   bool _isCorrectRecipe() {
     if (_recipeNameController.text.isEmpty ||
         _descriptionController.text.isEmpty ||
-        ingredients.isEmpty) {
+        _ingredients.isEmpty) {
       return false;
     }
 
-    for (final ingredient in ingredients) {
+    for (final ingredient in _ingredients) {
       if (ingredient.name.isEmpty ||
           ingredient.amount == null ||
           ingredient.unit.isEmpty) {
@@ -66,7 +66,7 @@ class _NewRecipePageState extends State<NewRecipePage> {
     var recipe = Recipe(
       name: _recipeNameController.text,
       directions: _descriptionController.text,
-      ingredients: ingredients,
+      ingredients: _ingredients,
     );
 
     return recipe;
@@ -98,13 +98,13 @@ class _NewRecipePageState extends State<NewRecipePage> {
             ),
             const SizedBox(height: 10),
 
-            ...ingredients.asMap().entries.map((entry) {
+            ..._ingredients.asMap().entries.map((entry) {
               final index = entry.key;
               final ingredient = entry.value;
 
               return IngredientRow(
                 ingredient: ingredient,
-                units: units,
+                units: _units,
                 onDelete: () => _removeIngredient(index),
                 onNameChanged: (val) => ingredient.name = val,
                 onAmountChanged: (val) => ingredient.amount = int.tryParse(val),

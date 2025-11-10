@@ -89,7 +89,6 @@ class RecipesProvider extends ChangeNotifier {
       }
     }
 
-    print(tags);
     return tags;
   }
 
@@ -103,7 +102,6 @@ class RecipesProvider extends ChangeNotifier {
       }
     }
 
-    print(names);
     return names;
   }
 }

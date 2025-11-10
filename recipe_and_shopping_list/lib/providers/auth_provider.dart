@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -35,7 +36,7 @@ class AuthProvider extends ChangeNotifier {
       final credential = GoogleAuthProvider.credential(idToken: auth.idToken);
       return await _firebaseAuth.signInWithCredential(credential);
     } catch (e) {
-      print("BAD");
+      log('Failed to sign in: $e');
       return null;
     }
   }
@@ -45,7 +46,7 @@ class AuthProvider extends ChangeNotifier {
       await _firebaseAuth.signOut();
       await _googleSignIn.signOut();
     } catch (e) {
-      print("BAD2");
+      log('Failed to sign out: $e');
     }
   }
 }

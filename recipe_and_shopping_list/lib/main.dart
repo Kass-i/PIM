@@ -8,8 +8,8 @@ import 'package:recipe_and_shopping_list/pages/recipes_page.dart';
 import 'package:recipe_and_shopping_list/providers/cart_provider.dart';
 import 'package:recipe_and_shopping_list/providers/recipes_provider.dart';
 import 'package:recipe_and_shopping_list/providers/auth_provider.dart';
+import 'package:recipe_and_shopping_list/providers/theme_provider.dart';
 import 'package:recipe_and_shopping_list/themes.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,7 +18,7 @@ Future<void> main() async {
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => CartProvider()),
+        ChangeNotifierProvider(create: (_) => ThemeProvider()),
         ChangeNotifierProvider(create: (_) => AuthProvider()),
         ChangeNotifierProxyProvider<AuthProvider, RecipesProvider>(
           create: (_) => RecipesProvider(),
@@ -34,85 +34,25 @@ Future<void> main() async {
   );
 }
 
-class MainApp extends StatefulWidget {
+class MainApp extends StatelessWidget {
   const MainApp({super.key});
 
   @override
-  State<MainApp> createState() => _MainAppState();
-}
-
-class _MainAppState extends State<MainApp> {
-  ThemeMode _themeMode = ThemeMode.system;
-
-  @override
-  void initState() {
-    super.initState();
-    _loadTheme();
-  }
-
-  Future<void> _loadTheme() async {
-    final prefs = await SharedPreferences.getInstance();
-    final savedTheme = prefs.getString('themeMode') ?? 'system';
-    setState(() {
-      _themeMode = _parseTheme(savedTheme);
-    });
-  }
-
-  Future<void> _saveTheme(ThemeMode mode) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('themeMode', _themeToString(mode));
-  }
-
-  String _themeToString(ThemeMode mode) {
-    switch (mode) {
-      case ThemeMode.light:
-        return 'light';
-      case ThemeMode.dark:
-        return 'dark';
-      default:
-        return 'system';
-    }
-  }
-
-  ThemeMode _parseTheme(String value) {
-    switch (value) {
-      case 'light':
-        return ThemeMode.light;
-      case 'dark':
-        return ThemeMode.dark;
-      default:
-        return ThemeMode.system;
-    }
-  }
-
-  void _toggleTheme(bool isDark) {
-    setState(() {
-      _themeMode = isDark ? ThemeMode.dark : ThemeMode.light;
-      _saveTheme(_themeMode);
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
+
     return MaterialApp(
       title: 'Recipe & Shopping List',
       theme: lightTheme,
       darkTheme: darkTheme,
-      themeMode: _themeMode,
-      home: Home(themeMode: _themeMode, onThemeChanged: _toggleTheme),
+      themeMode: themeProvider.themeMode,
+      home: Home(),
     );
   }
 }
 
 class Home extends StatefulWidget {
-  final ThemeMode themeMode;
-  final Function(bool) onThemeChanged;
-
-  const Home({
-    super.key,
-    required this.themeMode,
-    required this.onThemeChanged,
-  });
+  const Home({super.key});
 
   @override
   State<Home> createState() => _HomeState();
@@ -137,7 +77,9 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = widget.themeMode == ThemeMode.dark;
+    final themeProvider = Provider.of<ThemeProvider>(context);
+    final isDark = themeProvider.themeMode == ThemeMode.dark;
+
     final authProvider = Provider.of<AuthProvider>(context);
     final user = authProvider.currentUser;
 
@@ -217,7 +159,7 @@ class _HomeState extends State<Home> {
               title: const Text('Dark mode'),
               secondary: const Icon(Icons.dark_mode_outlined),
               value: isDark,
-              onChanged: (value) => widget.onThemeChanged(value),
+              onChanged: themeProvider.toggleTheme,
             ),
           ],
         ),

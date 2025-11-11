@@ -25,7 +25,7 @@ The application contains 3 views which can be changed via **bottom navigation ba
     - Turning on edit mode unchecks all ingredients (with confirmation dialog).
     - Ingredients with the same tag, name, and unit are grouped and summed.
     
-Additionally there is a **drawer** which contains user's information, a login/logout button and a toggle to change the theme of the app (system one is the default).
+Additionally there is a **drawer** which contains user's information, a login/logout button, a toggle to change the theme of the app (system one is the default) and language setting (Polish or English).
 
 ### Firestore
 Firestore is used to save users' recipes. Database structure: `/{user_uid}/{recipe_name}`. Every recipe contains:
@@ -51,6 +51,7 @@ ingredients: Array<object>
 ### SharedPreferences
 Data stored locally:
 - `'themeMode'`
+- `'languageCode'`
 - `'is_edit_mode_${user_uid}'`
 - `'cart_data_${user_uid}'`
 - `'checked_ingredients_${user_uid}'`

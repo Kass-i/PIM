@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:recipe_and_shopping_list/l10n/app_localizations.dart';
 import 'package:recipe_and_shopping_list/providers/cart_provider.dart';
 import 'package:recipe_and_shopping_list/providers/recipes_provider.dart';
 
@@ -8,6 +9,8 @@ class RecipesPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final trans = AppLocalizations.of(context)!;
+
     final recipeProvider = Provider.of<RecipesProvider>(context);
     final recipes = recipeProvider.recipes;
 
@@ -19,7 +22,7 @@ class RecipesPage extends StatelessWidget {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-              "The cart is not in the edit mode!",
+              trans.recipes_notInEditMode,
               style: TextStyle(color: Theme.of(context).colorScheme.onError),
             ),
             backgroundColor: Theme.of(context).colorScheme.error,
@@ -29,16 +32,16 @@ class RecipesPage extends StatelessWidget {
       }
 
       cartProvider.addToCart(recipeName);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("The recipe was added to the cart")),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(trans.recipes_recipeAddedToCart)));
     }
 
     void deleteRecipe(String recipeName) {
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: const Text("Are you sure?"),
+          title: Text(trans.recipes_areYouSure),
           actions: [
             TextButton(
               onPressed: () {
@@ -46,13 +49,13 @@ class RecipesPage extends StatelessWidget {
                 cartProvider.removeRecipeCompletely(recipeName);
                 Navigator.pop(context);
               },
-              child: const Text("Yes"),
+              child: Text(trans.recipes_yes),
             ),
             TextButton(
               onPressed: () {
                 Navigator.pop(context);
               },
-              child: const Text("No"),
+              child: Text(trans.recipes_no),
             ),
           ],
         ),
@@ -61,7 +64,7 @@ class RecipesPage extends StatelessWidget {
 
     return Scaffold(
       body: recipes.isEmpty
-          ? const Center(child: Text("No recipes"))
+          ? Center(child: Text(trans.recipes_noRecipes))
           : ListView.builder(
               itemCount: recipes.length,
               itemBuilder: (context, index) {
@@ -91,8 +94,8 @@ class RecipesPage extends StatelessWidget {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
-                            'Ingredients:',
+                          Text(
+                            trans.recipes_ingredients,
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 16,
@@ -105,8 +108,8 @@ class RecipesPage extends StatelessWidget {
                             ),
                           ),
                           const SizedBox(height: 8),
-                          const Text(
-                            'Directions:',
+                          Text(
+                            trans.recipes_instructions,
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 16,

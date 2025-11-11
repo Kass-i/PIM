@@ -1,0 +1,41 @@
+{
+  "main_appTitle": "Recipe & Shopping List",
+  "main_widgetTitles": "Recipes:Add new recipe:Shopping List",
+  "main_bottomNavBarRecipe": "Recipes",
+  "main_bottomNavBarNewRecipe": "New recipe",
+  "main_bottomNavBarCart": "Cart",
+  "main_guest": "Guest",
+  "main_login": "Login",
+  "main_logout": "Logout",
+  "main_darkMode": "Dark mode",
+
+  "recipes_notInEditMode": "The cart is not in the edit mode!",
+  "recipes_recipeAddedToCart": "The recipe was added to the cart",
+  "recipes_areYouSure": "Are you sure?",
+  "recipes_yes": "Yes",
+  "recipes_no": "No",
+  "recipes_noRecipes": "No recipes",
+  "recipes_ingredients": "Ingredients:",
+  "recipes_instructions": "Instructions:",
+
+  "cart_noTag": "No tag",
+  "cart_willUncheck": "When you turn on edit mode, all ingredients will become unchecked.",
+  "cart_emptyCart": "Empty cart",
+  "cart_editMode": "Edit mode",
+  "cart_addedRecipes": "Added recipes",
+
+  "newRecipe_units": "pcs:g:dag:kg:ml:l:cup:tbsp:tsp",
+  "newRecipe_loginToAdd": "Login to add the recipe!",
+  "newRecipe_addedSuccessfully": "The recipe added successfully",
+  "newRecipe_wrongForm": "Fill all recipe fields correctly",
+  "newRecipe_recipeName": "Recipe name",
+  "newRecipe_ingredients": "Ingredients",
+  "newRecipe_addIngredient": "Add ingredient",
+  "newRecipe_recipe": "Recipe",
+  "newRecipe_save": "Save",
+
+  "ingredientRow_name": "Name",
+  "ingredientRow_amount": "Amount",
+  "ingredientRow_unit": "Unit",
+  "ingredientRow_tag": "Tag"
+}

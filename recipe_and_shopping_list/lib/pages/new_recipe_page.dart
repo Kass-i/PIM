@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:recipe_and_shopping_list/db/ingredient.dart';
 import 'package:recipe_and_shopping_list/db/recipe.dart';
+import 'package:recipe_and_shopping_list/l10n/app_localizations.dart';
 import 'package:recipe_and_shopping_list/providers/recipes_provider.dart';
 import 'package:recipe_and_shopping_list/widgets/ingredient_row.dart';
 
@@ -16,25 +17,19 @@ class _NewRecipePageState extends State<NewRecipePage> {
   final TextEditingController _recipeNameController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
 
-  final List<Ingredient> _ingredients = [
-    Ingredient(name: '', amount: null, unit: 'szt'),
-  ];
+  final List<Ingredient> _ingredients = [];
+  String _firstUnit = "";
 
-  final List<String> _units = [
-    "szt",
-    "g",
-    "dag",
-    "kg",
-    "ml",
-    "l",
-    "szkl.",
-    "łyż.",
-    "łyżecz.",
-  ];
+  void _initIngredients(String firstUnit) {
+    setState(() {
+      _firstUnit = firstUnit;
+      _ingredients.add(Ingredient(name: '', amount: null, unit: _firstUnit));
+    });
+  }
 
   void _addIngredient() {
     setState(() {
-      _ingredients.add(Ingredient(name: '', amount: null, unit: 'szt'));
+      _ingredients.add(Ingredient(name: '', amount: null, unit: _firstUnit));
     });
   }
 
@@ -74,7 +69,12 @@ class _NewRecipePageState extends State<NewRecipePage> {
 
   @override
   Widget build(BuildContext context) {
+    final trans = AppLocalizations.of(context)!;
+
     final recipeProvider = Provider.of<RecipesProvider>(context);
+
+    final List<String> units = trans.newRecipe_units.split(':');
+    _initIngredients(units[0]);
 
     void saveRecipe() {
       String message;
@@ -82,13 +82,13 @@ class _NewRecipePageState extends State<NewRecipePage> {
       if (_isCorrectRecipe()) {
         recipeProvider.addRecipe(_createRecipe());
         if (recipeProvider.recipes.isEmpty) {
-          message = "Login to add the recipe!";
+          message = trans.newRecipe_loginToAdd;
           error = true;
         } else {
-          message = "The recipe added successfully";
+          message = trans.newRecipe_addedSuccessfully;
         }
       } else {
-        message = "Fill all recipe fields correctly";
+        message = trans.newRecipe_wrongForm;
         error = true;
       }
 
@@ -118,15 +118,15 @@ class _NewRecipePageState extends State<NewRecipePage> {
             TextField(
               controller: _recipeNameController,
               decoration: InputDecoration(
-                labelText: "Recipe name",
+                labelText: trans.newRecipe_recipeName,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(14),
                 ),
               ),
             ),
             const SizedBox(height: 20),
-            const Text(
-              "Ingredients",
+            Text(
+              trans.newRecipe_ingredients,
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 10),
@@ -137,7 +137,7 @@ class _NewRecipePageState extends State<NewRecipePage> {
 
               return IngredientRow(
                 ingredient: ingredient,
-                units: _units,
+                units: units,
                 onDelete: () => _removeIngredient(index),
                 onNameChanged: (val) => ingredient.name = val,
                 onAmountChanged: (val) => ingredient.amount = int.tryParse(val),
@@ -149,7 +149,7 @@ class _NewRecipePageState extends State<NewRecipePage> {
             Center(
               child: ElevatedButton.icon(
                 icon: const Icon(Icons.add),
-                label: const Text("Add ingredient"),
+                label: Text(trans.newRecipe_addIngredient),
                 onPressed: _addIngredient,
                 style: ElevatedButton.styleFrom(
                   minimumSize: const Size(160, 40),
@@ -160,7 +160,7 @@ class _NewRecipePageState extends State<NewRecipePage> {
             TextField(
               controller: _descriptionController,
               decoration: InputDecoration(
-                labelText: "Recipe",
+                labelText: trans.newRecipe_recipe,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(14),
                 ),
@@ -173,7 +173,7 @@ class _NewRecipePageState extends State<NewRecipePage> {
             Center(
               child: ElevatedButton.icon(
                 icon: const Icon(Icons.save),
-                label: const Text("Save"),
+                label: Text(trans.newRecipe_save),
                 onPressed: () => saveRecipe(),
                 style: ElevatedButton.styleFrom(
                   minimumSize: const Size(160, 40),

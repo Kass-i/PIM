@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:recipe_and_shopping_list/db/ingredient.dart';
+import 'package:recipe_and_shopping_list/l10n/app_localizations.dart';
 import 'package:recipe_and_shopping_list/providers/cart_provider.dart';
 
 class ShoppingListPage extends StatelessWidget {
@@ -8,6 +9,8 @@ class ShoppingListPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final trans = AppLocalizations.of(context)!;
+
     final cartProvider = Provider.of<CartProvider>(context);
     final recipes = cartProvider.cart;
     final isEditMode = cartProvider.isEditMode;
@@ -16,7 +19,7 @@ class ShoppingListPage extends StatelessWidget {
 
     final Map<String, List<Ingredient>> grouped = {};
     for (final ingredient in allIngredients) {
-      final tag = ingredient.tag ?? "No tag";
+      final tag = ingredient.tag ?? trans.cart_noTag;
       grouped.putIfAbsent(tag, () => []);
 
       // Look for an existing ingredient with the same name and unit
@@ -53,23 +56,21 @@ class ShoppingListPage extends StatelessWidget {
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: const Text("Are you sure?"),
-          content: const Text(
-            "When you turn on edit mode, all ingredients will become unchecked.",
-          ),
+          title: Text(trans.recipes_areYouSure),
+          content: Text(trans.cart_willUncheck),
           actions: [
             TextButton(
               onPressed: () {
                 cartProvider.toggleEditMode(isEditMode);
                 Navigator.pop(context);
               },
-              child: const Text("Yes"),
+              child: Text(trans.recipes_yes),
             ),
             TextButton(
               onPressed: () {
                 Navigator.pop(context);
               },
-              child: const Text("No"),
+              child: Text(trans.recipes_no),
             ),
           ],
         ),
@@ -78,12 +79,12 @@ class ShoppingListPage extends StatelessWidget {
 
     return Scaffold(
       body: recipes.isEmpty
-          ? const Center(child: Text("Empty cart"))
+          ? Center(child: Text(trans.cart_emptyCart))
           : SingleChildScrollView(
               child: Column(
                 children: [
                   SwitchListTile(
-                    title: const Text('Edit mode'),
+                    title: Text(trans.cart_editMode),
                     secondary: const Icon(Icons.edit_outlined),
                     value: isEditMode,
                     onChanged: toggleEditMode,
@@ -159,8 +160,8 @@ class ShoppingListPage extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
-                            "Added recipes",
+                          Text(
+                            trans.cart_addedRecipes,
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,

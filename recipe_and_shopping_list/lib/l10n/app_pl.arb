@@ -1,0 +1,41 @@
+{
+  "main_appTitle": "Przepisy i Lista Zakupów",
+  "main_widgetTitles": "Przepisy:Dodaj nowy przepis:Lista zakupów",
+  "main_bottomNavBarRecipe": "Przepisy",
+  "main_bottomNavBarNewRecipe": "Nowy przepis",
+  "main_bottomNavBarCart": "Koszyk",
+  "main_guest": "Gość",
+  "main_login": "Zaloguj się",
+  "main_logout": "Wyloguj się",
+  "main_darkMode": "Tryb ciemny",
+
+  "recipes_notInEditMode": "Koszyk nie jest w trybie edycji!",
+  "recipes_recipeAddedToCart": "Przepis został dodany do koszyka",
+  "recipes_areYouSure": "Czy jesteś pewien?",
+  "recipes_yes": "Tak",
+  "recipes_no": "Nie",
+  "recipes_noRecipes": "Brak przepisów",
+  "recipes_ingredients": "Składniki:",
+  "recipes_instructions": "Instrukcje:",
+
+  "cart_noTag": "Brak tagu",
+  "cart_willUncheck": "Po włączeniu trybu edycji wszystkie składniki zostaną odznaczone.",
+  "cart_emptyCart": "Pusty koszyk",
+  "cart_editMode": "Tryb edycji",
+  "cart_addedRecipes": "Dodane przepisy",
+
+  "newRecipe_units": "szt:g:dag:kg:ml:l:szkl.:łyż.:łyżecz.",
+  "newRecipe_loginToAdd": "Zaloguj się, aby dodać przepis!",
+  "newRecipe_addedSuccessfully": "Przepis został dodany pomyślnie",
+  "newRecipe_wrongForm": "Wypełnij poprawnie wszystkie pola przepisu",
+  "newRecipe_recipeName": "Nazwa przepisu",
+  "newRecipe_ingredients": "Składniki",
+  "newRecipe_addIngredient": "Dodaj składnik",
+  "newRecipe_recipe": "Przepis",
+  "newRecipe_save": "Zapisz",
+
+  "ingredientRow_name": "Nazwa",
+  "ingredientRow_amount": "Ilość",
+  "ingredientRow_unit": "Jednostka",
+  "ingredientRow_tag": "Tag"
+}

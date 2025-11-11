@@ -1,7 +1,9 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:recipe_and_shopping_list/firebase_options.dart';
+import 'package:recipe_and_shopping_list/l10n/app_localizations.dart';
 import 'package:recipe_and_shopping_list/pages/cart_page.dart';
 import 'package:recipe_and_shopping_list/pages/new_recipe_page.dart';
 import 'package:recipe_and_shopping_list/pages/recipes_page.dart';
@@ -46,6 +48,13 @@ class MainApp extends StatelessWidget {
       theme: lightTheme,
       darkTheme: darkTheme,
       themeMode: themeProvider.themeMode,
+      localizationsDelegates: [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: [Locale('en'), Locale('pl')],
       home: Home(),
     );
   }
@@ -67,8 +76,6 @@ class _HomeState extends State<Home> {
     ShoppingListPage(),
   ];
 
-  final List<String> _title = ["Recipes", "Add new recipe", "Shopping List"];
-
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -77,6 +84,9 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+    final trans = AppLocalizations.of(context)!;
+    final List<String> title = trans.main_widgetTitles.split(':');
+
     final themeProvider = Provider.of<ThemeProvider>(context);
     final isDark = themeProvider.themeMode == ThemeMode.dark;
 
@@ -86,24 +96,24 @@ class _HomeState extends State<Home> {
     return Scaffold(
       body: Container(child: _widgetOptions.elementAt(_selectedIndex)),
       bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
+        items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.menu_book),
-            label: 'Recipes',
+            label: trans.main_bottomNavBarRecipe,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.ramen_dining),
-            label: 'New recipe',
+            label: trans.main_bottomNavBarNewRecipe,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.shopping_cart),
-            label: 'Cart',
+            label: trans.main_bottomNavBarCart,
           ),
         ],
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
       ),
-      appBar: AppBar(title: Text(_title[_selectedIndex])),
+      appBar: AppBar(title: Text(title[_selectedIndex])),
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
@@ -113,7 +123,7 @@ class _HomeState extends State<Home> {
                 color: Theme.of(context).colorScheme.inversePrimary,
               ),
               accountName: Text(
-                user?.displayName ?? "Guest",
+                user?.displayName ?? trans.main_guest,
                 style: TextStyle(
                   fontSize: 20,
                   color: Theme.of(context).colorScheme.onPrimaryContainer,
@@ -147,7 +157,7 @@ class _HomeState extends State<Home> {
             // ),
             ListTile(
               leading: const Icon(Icons.login),
-              title: Text(user == null ? 'Login' : "Logout"),
+              title: Text(user == null ? trans.main_login : trans.main_logout),
               onTap: () {
                 user == null
                     ? authProvider.signInWithGoogle()
@@ -156,7 +166,7 @@ class _HomeState extends State<Home> {
             ),
             const Divider(),
             SwitchListTile(
-              title: const Text('Dark mode'),
+              title: Text(trans.main_darkMode),
               secondary: const Icon(Icons.dark_mode_outlined),
               value: isDark,
               onChanged: themeProvider.toggleTheme,

@@ -55,6 +55,7 @@ class MainApp extends StatelessWidget {
         GlobalCupertinoLocalizations.delegate,
       ],
       supportedLocales: [Locale('en'), Locale('pl')],
+      locale: themeProvider.locale,
       home: Home(),
     );
   }
@@ -164,6 +165,24 @@ class _HomeState extends State<Home> {
                     : authProvider.signOut();
               },
             ),
+
+            ListTile(
+              leading: const Icon(Icons.language),
+              title: Text(trans.main_language),
+              trailing: DropdownButton<Locale>(
+                value: themeProvider.locale,
+                items: const [
+                  DropdownMenuItem(value: Locale('en'), child: Text('English')),
+                  DropdownMenuItem(value: Locale('pl'), child: Text('Polski')),
+                ],
+                onChanged: (Locale? locale) {
+                  if (locale != null) {
+                    themeProvider.setLocale(locale);
+                  }
+                },
+              ),
+            ),
+
             const Divider(),
             SwitchListTile(
               title: Text(trans.main_darkMode),

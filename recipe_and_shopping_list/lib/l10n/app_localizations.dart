@@ -152,6 +152,12 @@ abstract class AppLocalizations {
   /// **'Dark mode'**
   String get main_darkMode;
 
+  /// No description provided for @main_language.
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get main_language;
+
   /// No description provided for @recipes_notInEditMode.
   ///
   /// In en, this message translates to:

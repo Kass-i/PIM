@@ -5,15 +5,24 @@ class ThemeProvider extends ChangeNotifier {
   ThemeMode _themeMode = ThemeMode.system;
   ThemeMode get themeMode => _themeMode;
 
+  Locale _locale = const Locale('en');
+  Locale get locale => _locale;
+
   ThemeProvider() {
-    _loadTheme();
+    _loadPreferences();
   }
 
-  Future<void> _loadTheme() async {
+  Future<void> _loadPreferences() async {
     final prefs = await SharedPreferences.getInstance();
+
     final savedTheme = prefs.getString('themeMode') ?? 'system';
     _themeMode = _parseTheme(savedTheme);
+
+    final savedLang = prefs.getString('languageCode') ?? 'en';
+    _locale = Locale(savedLang);
+
     notifyListeners();
+    ;
   }
 
   void toggleTheme(bool isDark) async {
@@ -33,5 +42,13 @@ class ThemeProvider extends ChangeNotifier {
       default:
         return ThemeMode.system;
     }
+  }
+
+  void setLocale(Locale locale) async {
+    _locale = locale;
+    notifyListeners();
+
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('languageCode', locale.languageCode);
   }
 }

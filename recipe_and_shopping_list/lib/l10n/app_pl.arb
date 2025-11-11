@@ -8,6 +8,7 @@
   "main_login": "Zaloguj się",
   "main_logout": "Wyloguj się",
   "main_darkMode": "Tryb ciemny",
+  "main_language": "Język",
 
   "recipes_notInEditMode": "Koszyk nie jest w trybie edycji!",
   "recipes_recipeAddedToCart": "Przepis został dodany do koszyka",

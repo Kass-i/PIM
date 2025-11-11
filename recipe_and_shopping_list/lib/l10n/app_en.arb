@@ -8,6 +8,7 @@
   "main_login": "Login",
   "main_logout": "Logout",
   "main_darkMode": "Dark mode",
+  "main_language": "Language",
 
   "recipes_notInEditMode": "The cart is not in the edit mode!",
   "recipes_recipeAddedToCart": "The recipe was added to the cart",

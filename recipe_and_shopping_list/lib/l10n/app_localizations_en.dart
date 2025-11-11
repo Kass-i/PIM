@@ -36,6 +36,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get main_darkMode => 'Dark mode';
 
   @override
+  String get main_language => 'Language';
+
+  @override
   String get recipes_notInEditMode => 'The cart is not in the edit mode!';
 
   @override

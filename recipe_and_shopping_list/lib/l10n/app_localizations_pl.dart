@@ -36,6 +36,9 @@ class AppLocalizationsPl extends AppLocalizations {
   String get main_darkMode => 'Tryb ciemny';
 
   @override
+  String get main_language => 'Język';
+
+  @override
   String get recipes_notInEditMode => 'Koszyk nie jest w trybie edycji!';
 
   @override

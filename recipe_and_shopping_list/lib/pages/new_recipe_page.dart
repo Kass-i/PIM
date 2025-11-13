@@ -21,6 +21,10 @@ class _NewRecipePageState extends State<NewRecipePage> {
   String _firstUnit = "";
 
   void _initIngredients(String firstUnit) {
+    if (_ingredients.isNotEmpty) {
+      return;
+    }
+
     setState(() {
       _firstUnit = firstUnit;
       _ingredients.add(Ingredient(name: '', amount: null, unit: _firstUnit));

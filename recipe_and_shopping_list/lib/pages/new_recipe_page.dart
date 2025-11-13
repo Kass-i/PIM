@@ -80,6 +80,13 @@ class _NewRecipePageState extends State<NewRecipePage> {
     final List<String> units = trans.newRecipe_units.split(':');
     _initIngredients(units[0]);
 
+    // Language change - units mismatch
+    for (final ingredient in _ingredients) {
+      if (!units.contains(ingredient.unit)) {
+        ingredient.unit = units.first;
+      }
+    }
+
     void saveRecipe() {
       String message;
       bool error = false;
@@ -140,6 +147,7 @@ class _NewRecipePageState extends State<NewRecipePage> {
               final ingredient = entry.value;
 
               return IngredientRow(
+                key: ValueKey(ingredient),
                 ingredient: ingredient,
                 units: units,
                 onDelete: () => _removeIngredient(index),
